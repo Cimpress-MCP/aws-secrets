@@ -1,0 +1,54 @@
+{
+  "name": "aws-secrets",
+  "version": "0.0.0-development",
+  "description": "Safely store, version, and use secrets by leveraging AWS Key Managment Store.",
+  "main": "index.js",
+  "bin": {
+    "aws-secrets": "./cli/aws-secrets.js"
+  },
+  "scripts": {
+    "lint": "eslint . --ignore-pattern dist",
+    "test": "mocha tests/**/**.js",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cimpress-MCP/aws-secrets.git"
+  },
+  "keywords": [
+    "AWS",
+    "KMS",
+    "encryption",
+    "secrets"
+  ],
+  "author": {
+    "name": "Dave Purrington",
+    "email": "dave.purrington@gmail.com",
+    "url": "https://github.com/Cimpress-MCP/aws-secrets.git"
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/Cimpress-MCP/aws-secrets/issues"
+  },
+  "homepage": "https://github.com/Cimpress-MCP/aws-secrets#readme",
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-preset-es2015-node4": "^2.1.1",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
+    "mocha": "^3.2.0",
+    "semantic-release": "^6.3.2",
+    "semantic-release-cli": "^3.0.3",
+    "validate-commit-msg": "^2.12.1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.39.0",
+    "bluebird": "^3.5.0",
+    "command-line-args": "^4.0.2",
+    "command-line-commands": "^2.0.0",
+    "lodash": "^4.17.4"
+  }
+}
