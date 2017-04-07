@@ -1,1 +1,6 @@
 lib
+tests
+.babelrc
+.eslintrc
+.npmignore
+.travis.yml
