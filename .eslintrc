@@ -1,0 +1,20 @@
+{
+  "env": {
+    "node": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "extends": "airbnb",
+  "rules": {
+    "no-console": "off",
+    "strict": "off",
+    "maxlen": 0,
+    "max-len": 0,
+    "func-names": "off",
+    "linebreak-style": "off",
+    "no-param-reassign": 0,
+    "arrow-body-style": 0,
+    "no-plusplus": "off"
+  }
+}
