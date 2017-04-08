@@ -32,8 +32,6 @@
   },
   "homepage": "https://github.com/Cimpress-MCP/aws-secrets#readme",
   "devDependencies": {
-    "babel-cli": "^6.24.0",
-    "babel-preset-es2015-node4": "^2.1.1",
     "chai": "^3.5.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
