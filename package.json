@@ -2,9 +2,9 @@
   "name": "aws-secrets",
   "version": "0.0.0-development",
   "description": "Safely store, version, and use secrets by leveraging AWS Key Managment Store.",
-  "main": "index.js",
+  "main": "lib/aws-secrets.js",
   "bin": {
-    "aws-secrets": "./cli/aws-secrets.js"
+    "aws-secrets": "./lib/cli.js"
   },
   "scripts": {
     "lint": "eslint . --ignore-pattern dist",
