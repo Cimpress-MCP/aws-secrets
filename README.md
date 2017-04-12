@@ -1,4 +1,7 @@
+[![Build Status](https://travis-ci.org/Cimpress-MCP/aws-secrets.svg?branch=master)
+
 # aws-secrets
+
 With aws-secrets you can safely store, version, and use secrets by leveraging AWS Key Managment Store. 1. You put your secrets in a Javascript object.
 1. Use the CLI to encrypt that file
 1. Include the encrypted data in your source repository alongside your source code. You only need to decrypt that file back to disk when you need to make changes.
@@ -14,7 +17,7 @@ Only AWS users with access to your Key Management Store master key will be able 
 ## Prerequisites to Using
 Before you can use the module, you need to have set in place several things:
 1. Install [the AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) and [configure it](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) so that you can access your AWS account. Running `aws s3 ls` is a reasonable way to do this, assuming you are authorized to perform that operation.
-1. [Create a master key](http://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) in the AWS Key Management Service. Keys are region-specific, so be sure you create the key in the same region you intend to encrypt and decrypt secrets. Note that you cannot use the keys created automatically by AWS for securing services. Copy the ARN or the id of the key, which you will need later. To view your keys, find them in IAM under the section titled *Encryption keys.*
+2. [Create a master key](http://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) in the AWS Key Management Service. Keys are region-specific, so be sure you create the key in the same region you intend to encrypt and decrypt secrets. Note that you cannot use the keys created automatically by AWS for securing services. Copy the ARN or the id of the key, which you will need later. To view your keys, find them in IAM under the section titled *Encryption keys.*
 
 ## Usage
 
@@ -34,17 +37,17 @@ module.exports = {
   }
 };
 ~~~~
-1. Encrypt the secrets file using the cli:
+2. Encrypt the secrets file using the cli:
 
   `aws-secrets-cli encrypt .secrets.js secrets.js --key [your master key id, ARN, or alias]`
 
-1. Include the encrypted file (secrets.js in this example) in your source control project as a versioned file. For example:
+3. Include the encrypted file (secrets.js in this example) in your source control project as a versioned file. For example:
 
   `git add secrets.js`
 
-1. [Optional] Ignore the unencrypted file so that you do not accidentally add and commit it to your repo. If you are using git, this means adding .secrets.js to the `.gitignore` file.
+4. [Optional] Ignore the unencrypted file so that you do not accidentally add and commit it to your repo. If you are using git, this means adding .secrets.js to the `.gitignore` file.
 
-1. Put your non-sensitive configuration into an object. For sensitive data, refer to the object path in the secrets object, preceded by 'secrets@':
+5. Put your non-sensitive configuration into an object. For sensitive data, refer to the object path in the secrets object, preceded by 'secrets@':
 
   ~~~
   // config.js
