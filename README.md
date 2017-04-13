@@ -102,3 +102,6 @@ Secrets are encrypted and stored in base64 format. At runtime, this file is decr
 Encryption keys are managed by AWS Key Management Store and all authentication/authorization happens through that. As a consequence, any operation requiring encryption or decryption (i.e., runtime, developer edits) will require you to provide credentials to access the AWS KMS master key.
 
 Note that KMS keys can only be used to encrypt up to 4KiB of data. If your config file is longer than that, you will need to use envelope encryption, which is not currently supported by aws-secrets.
+
+## Development
+We are using [semantic-release](https://github.com/semantic-release/semantic-release) with [AngularJS Git Commit Message conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit). Please ensure you use that commit message format so that publishing happens as needed. We recommend using [commitizen](https://github.com/commitizen/cz-cli) for that.
