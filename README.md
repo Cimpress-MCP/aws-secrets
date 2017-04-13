@@ -1,8 +1,10 @@
-[![Build Status](https://travis-ci.org/Cimpress-MCP/aws-secrets.svg?branch=master)
+![Build Status](https://travis-ci.org/Cimpress-MCP/aws-secrets.svg?branch=master)
 
 # aws-secrets
 
-With aws-secrets you can safely store, version, and use secrets by leveraging AWS Key Managment Store. 1. You put your secrets in a Javascript object.
+With aws-secrets you can safely store, version, and use secrets by leveraging AWS Key Managment Store.
+
+1. You put your secrets in a Javascript object.
 1. Use the CLI to encrypt that file
 1. Include the encrypted data in your source repository alongside your source code. You only need to decrypt that file back to disk when you need to make changes.
 1. At runtime, use aws-secrets to access your unencrypted secrets without writing them to the filesystem.
@@ -39,7 +41,7 @@ module.exports = {
 ~~~~
 2. Encrypt the secrets file using the cli:
 
-  `aws-secrets-cli encrypt .secrets.js secrets.js --key [your master key id, ARN, or alias]`
+  `node_modules/.bin/aws-secrets encrypt-file .secrets.js secrets.js --key [your master key id, ARN, or alias]`
 
 3. Include the encrypted file (secrets.js in this example) in your source control project as a versioned file. For example:
 
@@ -90,11 +92,13 @@ const config = require('./config');
 ### Making Changes to Secrets
 The only time you need to decrypt the secrets and save to a file is when you need to change them. To do that, use the command line:
 
-`aws-secrets-cli decrypt secrets.js .secrets.js`
+`node_modules/.bin/aws-secrets decrypt-file secrets.js .secrets.js`
 
-`.secrets.js` will now contain the unencrypted verision of your secrets. Make your changes and then run the `encrypt` command as you did when you initially created the secrets.
+`.secrets.js` will now contain the unencrypted verision of your secrets. Make your changes and then run the `encrypt-file` command as you did when you initially created the secrets.
 
 ##  Details
 Secrets are encrypted and stored in base64 format. At runtime, this file is decrypted in memory and referenced by the configuration values.
 
 Encryption keys are managed by AWS Key Management Store and all authentication/authorization happens through that. As a consequence, any operation requiring encryption or decryption (i.e., runtime, developer edits) will require you to provide credentials to access the AWS KMS master key.
+
+Note that KMS keys can only be used to encrypt up to 4KiB of data. If your config file is longer than that, you will need to use envelope encryption, which is not currently supported by aws-secrets.
