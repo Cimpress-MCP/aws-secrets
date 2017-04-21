@@ -7,7 +7,7 @@ const mockFs = require('mock-fs');
 const AwsSecrets = require('../../lib/aws-secrets');
 
 const should = chai.should();
-const validSecretsObjectString = 'const x = { foo: \'bar\'}; module.exports.x = x;';
+const validSecretsObjectString = '{ "x": { "foo": "bar" } }';
 
 describe('AwsSecrets', () => {
   afterEach(mockFs.restore);
@@ -18,14 +18,6 @@ describe('AwsSecrets', () => {
         const awsSecrets = new AwsSecrets('asdf');
         should.exist(awsSecrets);
         awsSecrets.KeyId.should.equal('asdf');
-      });
-    });
-  });
-  describe('#requireFromString', () => {
-    describe('with valid module syntax', () => {
-      it('creates a valid object', () => {
-        const retval = AwsSecrets.requireFromString(validSecretsObjectString);
-        retval.should.deep.equal({ x: { foo: 'bar' } });
       });
     });
   });
@@ -70,13 +62,10 @@ describe('AwsSecrets', () => {
         const awsSecrets = new AwsSecrets('asdf', { region: 'eu-west-1' });
         simple.mock(awsSecrets.KMS, 'decrypt')
         .returnWith({ promise: () => P.resolve({ Plaintext: validSecretsObjectString }) });
-        mockFs({
-          x: 'asdf',
-        });
         const target = {
           x: 'secrets@x.foo',
         };
-        return awsSecrets.applySecrets('x', target)
+        return awsSecrets.applySecrets('asdf', target)
         .then((applied) => {
           applied.x.should.equal('bar');
         });
@@ -87,13 +76,10 @@ describe('AwsSecrets', () => {
         const awsSecrets = new AwsSecrets('asdf', { region: 'eu-west-1' });
         simple.mock(awsSecrets.KMS, 'decrypt')
         .returnWith({ promise: () => P.resolve({ Plaintext: '' }) });
-        mockFs({
-          x: 'asdf',
-        });
         const target = {
           x: 'secrets@x.foo',
         };
-        return awsSecrets.applySecrets('x', target)
+        return awsSecrets.applySecrets('asdf', target)
         .then((applied) => {
           applied.should.deep.equal(target);
         });
@@ -104,11 +90,9 @@ describe('AwsSecrets', () => {
         const awsSecrets = new AwsSecrets('asdf', { region: 'eu-west-1' });
         simple.mock(awsSecrets.KMS, 'decrypt')
         .returnWith({ promise: () => P.resolve({ Plaintext: validSecretsObjectString }) });
-        mockFs({
-          x: 'asdf',
-        });
+
         const target = {};
-        return awsSecrets.applySecrets('x', target)
+        return awsSecrets.applySecrets('asdf', target)
         .then((applied) => {
           applied.should.deep.equal(target);
         });
@@ -119,13 +103,11 @@ describe('AwsSecrets', () => {
         const awsSecrets = new AwsSecrets('asdf', { region: 'eu-west-1' });
         simple.mock(awsSecrets.KMS, 'decrypt')
         .returnWith({ promise: () => P.resolve({ Plaintext: validSecretsObjectString }) });
-        mockFs({
-          x: 'asdf',
-        });
+
         const target = {
           x: 'secrets@x.foos',
         };
-        return awsSecrets.applySecrets('x', target)
+        return awsSecrets.applySecrets('asdf', target)
         .then((applied) => {
           applied.should.deep.equal(target);
         });
