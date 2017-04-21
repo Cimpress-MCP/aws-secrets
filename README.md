@@ -25,27 +25,27 @@ Before you can use the module, you need to have set in place several things:
 
 ### Creating Secrets
 Using this module involves both the command line and code:
-1. Put your secrets in a plaintext Javascript file--say `.secrets.js`--that exports a single object. Use any form you like. For example:
+1. Put your secrets in a JSON file--say `.secrets.json`. For example:
 ~~~~
-module.exports = {
-  github: {
-    username: 'stevie',
-    password: 'albertistheman',
+{
+  "github": {
+    "username": 'stevie',
+    "password": 'albertistheman',
   },
-  foo: {
-    bar: {
-      key: 'qwerty'
+  "foo": {
+    "bar": {
+      "key": 'qwerty'
     }
   }
 };
 ~~~~
 2. Encrypt the secrets file using the cli:
 
-  `node_modules/.bin/aws-secrets encrypt-file .secrets.js secrets.js --key [your master key id, ARN, or alias]`
+  `node_modules/.bin/aws-secrets encrypt-file .secrets.json secrets.json --key [your master key id, ARN, or alias]`
 
-3. Include the encrypted file (secrets.js in this example) in your source control project as a versioned file. For example:
+3. Include the encrypted file (secrets.json in this example) in your source control project as a versioned file. For example:
 
-  `git add secrets.js`
+  `git add secrets.json`
 
 4. [Optional] Ignore the unencrypted file so that you do not accidentally add and commit it to your repo. If you are using git, this means adding .secrets.js to the `.gitignore` file.
 
@@ -65,17 +65,23 @@ module.exports = {
 
 ### Accessing the Secrets at Runtime
 
-Use the AwsSecrets object to decrypt and apply the secrets to config.js:
+Use the AwsSecrets object to decrypt and apply the secrets to your configuration object:
 ~~~
 const AwsSecrets = require('aws-secrets');
 const config = require('./config');
+const P = require('bluebird');
+const fs = P.promisifyAll(require('fs'));
 ...
   const awsSecrets = new AwsSecrets([your master key id, arn, or alias])
-  const newConfig = awsSecrets.applySecrets('secrets.js', config);
+
+  return fs.readFileAsync('secrets.json')
+  .then(secrets => {
+    return awsSecrets.applySecrets(secrets, config);
+  })
 ...
 ~~~
 
-  newConfig (in memory) now has this value:
+  The return value has this value:
 
   ~~~
   // config.js
@@ -92,9 +98,9 @@ const config = require('./config');
 ### Making Changes to Secrets
 The only time you need to decrypt the secrets and save to a file is when you need to change them. To do that, use the command line:
 
-`node_modules/.bin/aws-secrets decrypt-file secrets.js .secrets.js`
+`node_modules/.bin/aws-secrets decrypt-file secrets.json .secrets.json`
 
-`.secrets.js` will now contain the unencrypted verision of your secrets. Make your changes and then run the `encrypt-file` command as you did when you initially created the secrets.
+`.secrets.json` will now contain the unencrypted verision of your secrets. Make your changes and then run the `encrypt-file` command as you did when you initially created the secrets.
 
 ##  Details
 Secrets are encrypted and stored in base64 format. At runtime, this file is decrypted in memory and referenced by the configuration values.
