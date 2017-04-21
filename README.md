@@ -89,7 +89,7 @@ const fs = P.promisifyAll(require('fs'));
     githubEndpoint: {
       uri: 'https://www.github.com',
       username: 'stevie',
-      password: 'albertistheman'
+      password: 'albert-is-the-man'
     },
     foobarkey: 'qwerty'
   }
