@@ -20,6 +20,13 @@ describe('AwsSecrets', () => {
         awsSecrets.KeyId.should.equal('asdf');
       });
     });
+    describe('with specified region', () => {
+      it('uses the provided region', () => {
+        const awsSecrets = new AwsSecrets('asdf', { region: 'eu-west-1' });
+        should.exist(awsSecrets);
+        awsSecrets.KMS.config.region.should.equal('eu-west-1');
+      })
+    })
   });
   describe('#decryptFile', () => {
     describe('with encrypted data and no target', () => {
