@@ -19,6 +19,9 @@ Only AWS users with access to your Key Management Store master key will be able 
 ## Prerequisites to Using
 Before you can use the module, you need to have set in place several things:
 1. Install [the AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) and [configure it](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) so that you can access your AWS account. Running `aws s3 ls` is a reasonable way to do this, assuming you are authorized to perform that operation.
+
+    * (Windows only) Set the AWS Region with the AWS_REGION environment variable
+  
 2. [Create a master key](http://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) in the AWS Key Management Service. Keys are region-specific, so be sure you create the key in the same region you intend to encrypt and decrypt secrets. Note that you cannot use the keys created automatically by AWS for securing services. Copy the ARN or the id of the key, which you will need later. To view your keys, find them in IAM under the section titled *Encryption keys.*
 
 ## Usage
@@ -41,7 +44,7 @@ Using this module involves both the command line and code:
 ~~~~
 2. Encrypt the secrets file using the cli:
 
-  `node_modules/.bin/aws-secrets encrypt-file .secrets.json secrets.json --key [your master key id, ARN, or alias]`
+  `node_modules/.bin/aws-secrets encrypt-file .secrets.json secrets.json --region us-east-1 --key [your master key id, ARN, or alias]`
 
 3. Include the encrypted file (secrets.json in this example) in your source control project as a versioned file. For example:
 
