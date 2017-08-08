@@ -4,7 +4,7 @@
 
 With aws-secrets you can safely store, version, and use secrets by leveraging AWS Key Managment Store.
 
-1. You put your secrets in a Javascript object.
+1. You put your secrets in a JSON file (other formats like YAML are fine too but require a parser to be supplied for application).
 1. Use the CLI to encrypt that file
 1. Include the encrypted data in your source repository alongside your source code. You only need to decrypt that file back to disk when you need to make changes.
 1. At runtime, use aws-secrets to access your unencrypted secrets without writing them to the filesystem.
@@ -21,7 +21,7 @@ Before you can use the module, you need to have set in place several things:
 1. Install [the AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) and [configure it](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) so that you can access your AWS account. Running `aws s3 ls` is a reasonable way to do this, assuming you are authorized to perform that operation.
 
     * Set the AWS_REGION environment variable if using the CLI
-  
+
 2. [Create a master key](http://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) in the AWS Key Management Service. Keys are region-specific, so be sure you create the key in the same region you intend to encrypt and decrypt secrets. Note that you cannot use the keys created automatically by AWS for securing services. Copy the ARN or the id of the key, which you will need later. To view your keys, find them in IAM under the section titled *Encryption keys.*
 
 ## Usage
@@ -82,6 +82,16 @@ const fs = P.promisifyAll(require('fs'));
     return awsSecrets.applySecrets(secrets, config);
   })
 ...
+~~~
+
+If you aren't using JSON, you can supply your own parser function as an option:
+~~~
+const yaml = require('js-yaml');
+...
+  return fs.readFileAsync('secrets.yaml')
+  .then(secrets => {
+    return awsSecrets.applySecrets(secrets, config, { parseFunction: yaml.safeLoad });
+  })
 ~~~
 
   The return value has this value:
