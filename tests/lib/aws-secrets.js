@@ -4,10 +4,17 @@ const nock = require('nock');
 const simple = require('simple-mock');
 const fs = P.promisifyAll(require('fs'));
 const mockFs = require('mock-fs');
+const yaml = require('js-yaml');
 const AwsSecrets = require('../../lib/aws-secrets');
 
 const should = chai.should();
-const validSecretsObjectString = '{ "x": { "foo": "bar" } }';
+const validSecretsObject = {
+  x: {
+    foo: 'bar',
+  },
+};
+const validSecretsObjectString = JSON.stringify(validSecretsObject);
+const validSecretsYamlString = yaml.safeDump(validSecretsObject);
 
 describe('AwsSecrets', () => {
   afterEach(mockFs.restore);
@@ -65,7 +72,7 @@ describe('AwsSecrets', () => {
   });
   describe('#applySecrets', () => {
     describe('with valid secrets source', () => {
-      it('applies the secrets to the target', () => {
+      it('applies the secrets to the target with default parse function', () => {
         const awsSecrets = new AwsSecrets('asdf', { region: 'eu-west-1' });
         simple.mock(awsSecrets.KMS, 'decrypt')
         .returnWith({ promise: () => P.resolve({ Plaintext: validSecretsObjectString }) });
@@ -73,6 +80,18 @@ describe('AwsSecrets', () => {
           x: 'secrets@x.foo',
         };
         return awsSecrets.applySecrets('asdf', target)
+        .then((applied) => {
+          applied.x.should.equal('bar');
+        });
+      });
+      it('applies the secrets to the target with custom parse function', () => {
+        const awsSecrets = new AwsSecrets('asdf', { region: 'eu-west-1' });
+        simple.mock(awsSecrets.KMS, 'decrypt')
+        .returnWith({ promise: () => P.resolve({ Plaintext: validSecretsYamlString }) });
+        const target = {
+          x: 'secrets@x.foo',
+        };
+        return awsSecrets.applySecrets('asdf', target, { parseFunction: yaml.safeLoad })
         .then((applied) => {
           applied.x.should.equal('bar');
         });
