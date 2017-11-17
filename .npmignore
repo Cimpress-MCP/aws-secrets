@@ -3,4 +3,3 @@ tests
 .eslintrc
 .npmignore
 .travis.yml
-yarn.lock
