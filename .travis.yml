@@ -7,13 +7,10 @@ notifications:
 node_js:
   - '7'
   - '6'
-before_install:
-
 before_script:
-  - npm install -g yarn
-  - yarn install
+  - npm install
 after_success:
-  - yarn run semantic-release
+  - npm run semantic-release
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
