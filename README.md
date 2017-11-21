@@ -12,13 +12,15 @@ With aws-secrets you can safely store, version, and use secrets by leveraging AW
 Only AWS users with access to your Key Management Store master key will be able to access the unencrypted secrets.
 
 ## Installation
-`npm install aws-secrets --save`, or
+```Bash
+npm install aws-secrets --save
+```
 
 ## Prerequisites to Using
 Before you can use the module, you need to have set in place several things:
 1. Install [the AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) and [configure it](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) so that you can access your AWS account. Running `aws s3 ls` is a reasonable way to do this, assuming you are authorized to perform that operation.
 
-    * Set the AWS\_REGION environment variable if using the CLI
+    * Set the AWS\_REGION environment variable if using the AWS CLI
 
 2. [Create a master key](http://docs.aws.amazon.com/kms/latest/developerguide/create-keys.html) in the AWS Key Management Service. Keys are region-specific, so be sure you create the key in the same region you intend to encrypt and decrypt secrets. Note that you cannot use the keys created automatically by AWS for securing services. Copy the ARN or the id of the key, which you will need later. To view your keys, find them in IAM under the section titled *Encryption keys.*
 
@@ -27,32 +29,45 @@ Before you can use the module, you need to have set in place several things:
 ### Creating Secrets
 Using this module involves both the command line and code:
 1. Put your secrets in a JSON file--say `.secrets.json`. For example:
-~~~~
+```JSON
 {
-  "github": {
-    "username": 'stevie',
-    "password": 'albertistheman',
-  },
-  "foo": {
-    "bar": {
-      "key": 'qwerty'
-    }
-  }
+      "github": {
+          "username": "stevie",
+          "password": "albertistheman"
+      },
+      "foo": {
+          "bar": {
+              "key": "qwerty"
+          }
+      }
 };
-~~~~
-2. Encrypt the secrets file using the cli:
+```
+2. Add encrypt and decrypt scripts to your package.json scripts section:
+```JSON
+"encrypt": "aws-secrets encrypt-file .secrets.json secrets.txt -k $npm_package_kmsKey && rm .secrets.json",
+"decrypt": "aws-secrets decrypt-file secrets.txt .secrets.json"
+```
+3. Put the ARN of your encryption key in package.json:
+```
+"kmsKey": "<YOUR KEY HERE>"
+```
+4. Encrypt the secrets file using the cli:
 
-  `node_modules/.bin/aws-secrets encrypt-file .secrets.json secrets.json --region us-east-1 --key [your master key id, ARN, or alias]`
+  ```Bash
+    npm run encrypt
+  ```
 
-3. Include the encrypted file (secrets.json in this example) in your source control project as a versioned file. For example:
+5. Include the encrypted file (secrets.json in this example) in your source control project as a versioned file. For example:
 
-  `git add secrets.json`
+  ```Bash
+  git add secrets.json
+  ```
 
-4. [Optional] Ignore the unencrypted file so that you do not accidentally add and commit it to your repo. If you are using git, this means adding .secrets.js to the `.gitignore` file.
+6. Ignore the unencrypted file so that you do not accidentally add and commit it to your repo. If you are using git, this means adding .secrets.js to the `.gitignore` file.
 
-5. Put your non-sensitive configuration into an object. For sensitive data, refer to the object path in the secrets object, preceded by 'secrets@':
+7. Put your non-sensitive configuration into an object. For sensitive data, refer to the object path in the secrets object, preceded by 'secrets@':
 
-  ~~~
+  ```Javascript
   // config.js
   module.exports = {
     githubEndpoint: {
@@ -62,39 +77,39 @@ Using this module involves both the command line and code:
     }
     foobarkey: 'secrets@foo.bar.key'
   }
-  ~~~
+  ```
 
 ### Accessing the Secrets at Runtime
 
 Use the AwsSecrets object to decrypt and apply the secrets to your configuration object:
-~~~
+```Javascript
 const AwsSecrets = require('aws-secrets');
 const config = require('./config');
 const P = require('bluebird');
 const fs = P.promisifyAll(require('fs'));
 ...
-  const awsSecrets = new AwsSecrets([your master key id, arn, or alias])
+  const awsSecrets = new AwsSecrets()
 
   return fs.readFileAsync('secrets.json')
   .then(secrets => {
     return awsSecrets.applySecrets(secrets, config);
   })
 ...
-~~~
+```
 
 If you aren't using JSON, you can supply your own parser function as an option:
-~~~
+```Javascript
 const yaml = require('js-yaml');
 ...
   return fs.readFileAsync('secrets.yaml')
   .then(secrets => {
     return awsSecrets.applySecrets(secrets, config, { parseFunction: yaml.safeLoad });
   })
-~~~
+```
 
   The return value has this value:
 
-  ~~~
+  ```Javascript
   // config.js
   module.exports = {
     githubEndpoint: {
@@ -104,14 +119,19 @@ const yaml = require('js-yaml');
     },
     foobarkey: 'qwerty'
   }
-  ~~~
+  ```
 
 ### Making Changes to Secrets
 The only time you need to decrypt the secrets and save to a file is when you need to change them. To do that, use the command line:
 
-`node_modules/.bin/aws-secrets decrypt-file secrets.json .secrets.json`
+```Bash
+npm decrypt-file secrets.json .secrets.json
+```
 
-`.secrets.json` will now contain the unencrypted verision of your secrets. Make your changes and then run the `encrypt-file` command as you did when you initially created the secrets.
+`.secrets.json` will now contain the unencrypted version of your secrets. Make your changes and then run the `encrypt-file` command as you did when you initially created the secrets.
+
+### Examples
+See the [example project](./examples/password/) for a concrete usage example.
 
 ##  Details
 Secrets are encrypted and stored in base64 format. At runtime, this file is decrypted in memory and referenced by the configuration values.

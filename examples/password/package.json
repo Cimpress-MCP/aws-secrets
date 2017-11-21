@@ -1,0 +1,18 @@
+{
+  "name": "password",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "kmsKey": "<YOUR KEY HERE>",
+  "scripts": {
+    "start": "node index.js",
+    "encrypt": "aws-secrets encrypt-file .secrets.json secrets.txt -k $npm_package_kmsKey && rm .secrets.json",
+    "decrypt": "aws-secrets decrypt-file secrets.txt .secrets.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-secrets": "^2.1.1",
+    "bluebird": "^3.5.1"
+  }
+}
