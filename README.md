@@ -18,7 +18,7 @@ npm install aws-secrets --save
 
 ## Prerequisites to Using
 Before you can use the module, you need to have set in place several things:
-1. Install [the AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) and [configure it](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) so that you can access your AWS account. Running `aws s3 ls` is a reasonable way to do this, assuming you are authorized to perform that operation.
+1. Install [the AWS CLI](http://docs.aws.amazon.com/cli/latest/userguide/installing.html) and [configure it](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) so that you can access your AWS account. Running `aws s3 ls` is a reasonable way to verify it is properly configured, assuming you are authorized to perform that operation.
 
     * Set the AWS\_REGION environment variable if using the AWS CLI
 
