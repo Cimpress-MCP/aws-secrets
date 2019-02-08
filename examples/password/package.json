@@ -13,6 +13,6 @@
   "license": "ISC",
   "dependencies": {
     "aws-secrets": "^2.1.1",
-    "bluebird": "^3.5.1"
+    "bluebird": "^3.5.3"
   }
 }
