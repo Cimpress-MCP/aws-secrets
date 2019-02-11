@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aws-secrets": "^2.1.1",
+    "aws-secrets": "^2.1.2",
     "bluebird": "^3.5.3"
   }
 }
