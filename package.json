@@ -10,7 +10,7 @@
     "lint": "eslint . --ignore-pattern dist",
     "test": "mocha tests/**/**.js",
     "commitmsg": "validate-commit-msg",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
