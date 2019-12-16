@@ -1,5 +1,7 @@
 ![Build Status](https://travis-ci.org/Cimpress-MCP/aws-secrets.svg?branch=master)
 
+Only building with node 8
+
 # aws-secrets
 
 With aws-secrets you can safely store, version, and use secrets by leveraging AWS Key Managment Store.
