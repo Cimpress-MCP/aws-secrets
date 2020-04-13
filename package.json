@@ -41,7 +41,7 @@
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
     "js-yaml": "^3.13.1",
-    "mocha": "^6.2.2",
+    "mocha": "^6.2.3",
     "mock-fs": "^4.8.0",
     "nock": "^9.6.1",
     "semantic-release": "^15.13.32",
